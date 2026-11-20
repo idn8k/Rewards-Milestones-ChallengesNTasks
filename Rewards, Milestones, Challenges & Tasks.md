@@ -1,9 +1,5 @@
 # Rewards, Milestones, Challenges & Tasks
 
-**Version 2.** Rules changed or added in this version are marked *(v2)*.
-
-### Changes in v2
-
 1. Excusals lower the locked target and the Milestone completion count by the difficulty % of what was excused, with a preview; undoing an excusal reverses it (TSK-13 to TSK-15).
 2. Adding a Milestone to a running reward recalculates the target with a preview; deleting one lowers it back (MS-32, MS-38 to MS-40, GR-4a).
 3. Milestones can be added only in a reward's first 14 active days and while its balance is below target; the parent gets a reminder push on active days 3, 6, 9 and 12 (MS-38, MS-41).
