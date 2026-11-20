@@ -1,29 +1,5 @@
 # Rewards, Milestones, Challenges & Tasks
 
-## Changes in v2
-
-1. Excusals lower the locked target and the Milestone completion count by the difficulty % of what was excused, with a preview; undoing an excusal reverses it (TSK-13 to TSK-15).
-2. Adding a Milestone to a running reward raises the target with a preview; deleting one lowers it back (MS-32, MS-38 to MS-40, GR-4a).
-3. Milestones can be added only in a reward's first 14 active days and while its balance is below target; the parent gets a reminder push on active days 3, 6, 9 and 12 (MS-38, MS-41).
-4. Milestones are never standalone: they are deleted with their reward and close into history when it is achieved (MS-3, MS-42, GR-17). Orphaned Milestones (old MS-34 to MS-37) are removed.
-5. After early completion, a Milestone's checkpoint windows keep running to its deadline (10.6, MS-19).
-6. A Milestone that misses its deadline goes into review (MS-22a).
-7. Checkpoints get the same 3-day grace period as shared windows (MS-17).
-8. A correction within the 3-day grace period that breaks the streak behind a paid bonus revokes it; the child can qualify again (APR-19).
-9. Confirming a challenge handover early approves everything still pending (CH-11).
-10. Occurrence states: approved can no longer become excused; excusals can be undone; pending occurrences that lock are auto-approved (6.0, APR-18).
-11. Shared window shares are topped up at window close, rounded up, and an empty window's bonus comes off the target (SSW-14, SSW-16a, SSW-21).
-12. Cancelling a shared reward shows the remaining child's contribution and suggests pausing (SH-8).
-13. Multiple guardians (ROL-1).
-14. Wording: separate personal and shared target formulas (8.2); qualifying again starts a fresh confirmation window (CW-1); "eligible days" used consistently (MS-12); example 17.9 prize changed to 400.
-15. Target changes are adjustments to the current target, rounded in the child's favour, never a recalculation; a change that brings the target to the balance reaches the reward at once (GR-4a). Renegotiation is defined: change difficulty or type a new target (GR-4b).
-16. Every Milestone, required or optional, ends on or before the reward's end date. Milestone pauses are capped there, and a checkpoint that the cap makes unearnable comes off the target; extensions past it are blocked (GR-16, MS-22, MS-24).
-17. Remaining checkpoints still pay after early completion (MS-21). A completed Milestone moves to history 3 days after its deadline, so the last checkpoint keeps its grace period (10.6, APR-10).
-18. Excusals lower the completion count by the Milestone's own count ÷ planned ratio, cumulatively (TSK-13). On-time re-completion is judged by activity date (MS-20, 10.6).
-19. Undoing an excusal is blocked during a confirmation window, and never restores a window headcount or a removed window bonus (TSK-14, TSK-15, SSW-17, SSW-21).
-20. Removing a sibling takes their remaining planned points off the target, and future windows are recalculated without them (SH-7).
-21. Activity on a reward's paused days never credits it (APR-16). Confirming a reward early also confirms a required Milestone still confirming (GR-14). A rejected Challenge's fail is final when its window closes (CW-8).
-
 ## 1. Overview
 
 Golden Rewards is a parent-managed chore and goal system in which children earn points toward one tangible, parent-agreed prize — a Golden Reward. The parent picks the prize, the timeframe and the difficulty; the app calculates an achievable point target from the child's planned tasks and bonus opportunities, so the child never chases an arbitrary number. Milestones add outcome-based sub-goals, shared Golden Rewards let siblings work toward one prize together, and Challenges reward a consistent completion rate over a few days or weeks.
