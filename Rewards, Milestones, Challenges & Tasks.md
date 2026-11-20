@@ -1,7 +1,9 @@
 # Rewards, Milestones, Challenges & Tasks
 
+## Changes in v2
+
 1. Excusals lower the locked target and the Milestone completion count by the difficulty % of what was excused, with a preview; undoing an excusal reverses it (TSK-13 to TSK-15).
-2. Adding a Milestone to a running reward recalculates the target with a preview; deleting one lowers it back (MS-32, MS-38 to MS-40, GR-4a).
+2. Adding a Milestone to a running reward raises the target with a preview; deleting one lowers it back (MS-32, MS-38 to MS-40, GR-4a).
 3. Milestones can be added only in a reward's first 14 active days and while its balance is below target; the parent gets a reminder push on active days 3, 6, 9 and 12 (MS-38, MS-41).
 4. Milestones are never standalone: they are deleted with their reward and close into history when it is achieved (MS-3, MS-42, GR-17). Orphaned Milestones (old MS-34 to MS-37) are removed.
 5. After early completion, a Milestone's checkpoint windows keep running to its deadline (10.6, MS-19).
@@ -14,10 +16,17 @@
 12. Cancelling a shared reward shows the remaining child's contribution and suggests pausing (SH-8).
 13. Multiple guardians (ROL-1).
 14. Wording: separate personal and shared target formulas (8.2); qualifying again starts a fresh confirmation window (CW-1); "eligible days" used consistently (MS-12); example 17.9 prize changed to 400.
+15. Target changes are adjustments to the current target, rounded in the child's favour, never a recalculation; a change that brings the target to the balance reaches the reward at once (GR-4a). Renegotiation is defined: change difficulty or type a new target (GR-4b).
+16. Every Milestone, required or optional, ends on or before the reward's end date. Milestone pauses are capped there, and a checkpoint that the cap makes unearnable comes off the target; extensions past it are blocked (GR-16, MS-22, MS-24).
+17. Remaining checkpoints still pay after early completion (MS-21). A completed Milestone moves to history 3 days after its deadline, so the last checkpoint keeps its grace period (10.6, APR-10).
+18. Excusals lower the completion count by the Milestone's own count ÷ planned ratio, cumulatively (TSK-13). On-time re-completion is judged by activity date (MS-20, 10.6).
+19. Undoing an excusal is blocked during a confirmation window, and never restores a window headcount or a removed window bonus (TSK-14, TSK-15, SSW-17, SSW-21).
+20. Removing a sibling takes their remaining planned points off the target, and future windows are recalculated without them (SH-7).
+21. Activity on a reward's paused days never credits it (APR-16). Confirming a reward early also confirms a required Milestone still confirming (GR-14). A rejected Challenge's fail is final when its window closes (CW-8).
 
 ## 1. Overview
 
-Golden Rewards is a parent-managed chore and goal system in which children earn points toward one tangible, parent-agreed prize — a Golden Reward. The parent picks the prize, the timeframe and the difficulty; the app calculates an achievable point target from the child's planned tasks and bonus opportunities, so the child never chases an arbitrary number. Milestones add verified sub-goals, shared Golden Rewards let siblings work toward one prize together, and Challenges reward a consistent completion rate over a few days or weeks.
+Golden Rewards is a parent-managed chore and goal system in which children earn points toward one tangible, parent-agreed prize — a Golden Reward. The parent picks the prize, the timeframe and the difficulty; the app calculates an achievable point target from the child's planned tasks and bonus opportunities, so the child never chases an arbitrary number. Milestones add outcome-based sub-goals, shared Golden Rewards let siblings work toward one prize together, and Challenges reward a consistent completion rate over a few days or weeks.
 
 ### Problem
 
@@ -71,7 +80,7 @@ Trust mode (child self-report without approval) is removed from this feature. Ev
 
 1. **Points are never a punishment.** No negative balances; points are never removed for misbehaviour. Missing a bonus means not earning it. The only removal is a parent correcting a dishonest or mistaken completion claim (Section 6.5). A prize can be rejected only through such corrections (Section 13).
 2. **The parent is the final authority**, with automatic approval as a fallback so a busy parent never costs a child earned progress.
-3. **The agreement is explicit.** Targets, budgets, completion counts, difficulty, streak requirements and windows lock at activation; later changes need an explicit parent action with a preview of effects. Locked numbers never change silently. Excusals, adding or deleting a Milestone, and a shared window no child can earn change the target only through such a previewed action (GR-4a). *(v2)*
+3. **The agreement is explicit.** Targets, budgets, completion counts, difficulty, streak requirements and windows lock at activation; later changes need an explicit parent action with a preview of effects. Locked numbers never change silently. Excusals, adding or deleting a Milestone, removing a participant, a shared window no child can earn and renegotiation change the target only through such a previewed action (GR-4a, GR-4b). *(v2)*
 4. **One scoring engine.** Every approved occurrence is worth 10 points for every child. Difficulty shapes targets, streaks and thresholds; it never changes the task value.
 5. **Early achievement is allowed.** A child can reach a reward, Milestone or challenge threshold before its planned end.
 6. **Destructive actions are warned.** Deleting or cancelling a reward, Milestone or challenge always shows its consequences first.
@@ -133,9 +142,9 @@ Every approved, eligible task occurrence earns exactly 10 points, regardless of 
 - **TSK-10** The parent can mark an occurrence excused. It earns no points and is excluded from challenge rates, Milestone completion counts and streak counts.
 - **TSK-11** A day on which every relevant linked occurrence is excused is neutral for streaks: it neither advances nor breaks them. If some linked occurrences remain on that day, the day qualifies only if all of those are approved.
 - **TSK-12** Excusals are always an explicit parent action and are never auto-approved.
-- **TSK-13** Excusing an occurrence lowers the target of each open Golden Reward it would have credited (GR-4a), and, for a milestone-linked occurrence, lowers its Milestone's completion count by the Milestone's difficulty % per excused occurrence, rounded down, minimum 1. The excusal screen previews the new target and count before the parent confirms. *(v2)*
-- **TSK-14** Undoing an excusal reverses its TSK-13 changes exactly, with the same preview. *(v2)*
-- **TSK-15** The parent can undo an excusal while the occurrence is unlocked (APR-10). It returns to Scheduled if its slot has not ended, otherwise to Missed, from where it can be approved retrospectively. *(v2)*
+- **TSK-13** Excusing an occurrence lowers the target of each open Golden Reward it would have credited (GR-4a), and, for a milestone-linked occurrence, lowers its Milestone's completion count. The count is reduced by ⌊ratio × excused linked occurrences⌋, recalculated over all excusals each time, never below 1. The ratio is the Milestone's completion count ÷ its planned milestone-linked occurrences, both as locked at activation. When the parent explicitly edits the count, the edited count becomes the new base, the ratio becomes the edited count ÷ the remaining non-excused planned occurrences, and only later excusals reduce it. The excusal screen previews the new target and count before the parent confirms. *(v2)*
+- **TSK-14** Undoing an excusal reverses its TSK-13 changes exactly, with the same preview. Two things are not reversed: the child stays out of any window headcount the excusal removed them from (SSW-17), and a window bonus removed under SSW-21 stays removed. *(v2)*
+- **TSK-15** The parent can undo an excusal while the occurrence is unlocked (APR-10), except while a reward it credits or its Milestone is in its confirmation window. It returns to Scheduled if its slot has not ended, otherwise to Missed, from where it can be approved retrospectively. *(v2)*
 
 ## 6. Submission, approval and correction
 
@@ -176,12 +185,12 @@ An occurrence becomes locked, and stays in its current state, under APR-10. A pe
 
 - **APR-10** The parent can approve or reject an occurrence retrospectively, including occurrences the child never submitted, while the occurrence is unlocked. It is unlocked while any of these holds:
 - a Golden Reward it credits is open;
-- for a milestone-linked task: its Milestone is open — active, paused, complete with checkpoint windows still running, in its confirmation window, or past its deadline awaiting review *(v2)*;
+- for a milestone-linked task: its Milestone is open — active, paused, complete with checkpoint windows or their 3-day results still running, in its confirmation window, or past its deadline awaiting review *(v2)*;
 - a Challenge it belongs to is running, paused, or in its confirmation window.
 
 When none holds, the occurrence is locked and cannot change.
 
-- **APR-11** A retrospective approval earns base points for the reward(s) open on the activity date. It does not reopen a checkpoint or shared-window result that has already closed (checkpoint and shared-window results close 3 days after the window ends — MS-17, SSW-12 *(v2)*).
+- **APR-11** A retrospective approval earns base points for the reward(s) active (not paused) on the activity date. It does not reopen a checkpoint or shared-window result that has already closed (checkpoint and shared-window results close 3 days after the window ends — MS-17, SSW-12 *(v2)*).
 
 ### 6.5 Rejection and correction
 
@@ -192,7 +201,7 @@ When none holds, the occurrence is locked and cannot change.
 
 ### 6.6 Earnings ownership
 
-- **APR-16** Earnings belong to the reward(s) open on the occurrence's activity date. If such a reward has since been achieved, deleted or cancelled, the occurrence is recorded in history only. It is never credited to a reward that started after the activity.
+- **APR-16** Earnings belong to the reward(s) open and not paused on the occurrence's activity date (GR-10). *(v2)* If such a reward has since been achieved, deleted or cancelled, the occurrence is recorded in history only. It is never credited to a reward that started after the activity.
 - **APR-17** All earnings triggered by one approval or correction — base points, any checkpoint or window share it completes, any Milestone completion or reopening, any completion bonus — are processed together before reward eligibility is evaluated.
 - **APR-18** When a pending occurrence locks (for example because the parent confirmed its reward early), it is approved automatically and recorded in history; it credits nothing that has already closed. *(v2)*
 
@@ -239,7 +248,8 @@ Shared Golden Reward:
 
 - **GR-3** Planned occurrences are those scheduled within the reward's timeframe at activation, including days that fall outside any shared window. Bonuses are included at their full planned value. Bonuses are therefore part of the target, not points on top of it.
 - **GR-4** The target is **locked at activation**. Schedule changes never recalculate it silently.
-- **GR-4a** The target changes only through previewed parent actions: excusing or un-excusing an occurrence (TSK-13, TSK-14), adding a Milestone (MS-39), deleting a Milestone (MS-32), a shared window no child can earn (SSW-21), or an explicit renegotiation. Each adjusts available points by the points added or removed, and the target becomes ⌈difficulty % × adjusted available points⌉. Bonuses or base points already earned are never affected. *(v2)*
+- **GR-4a** The target changes only through previewed parent actions: excusing or un-excusing an occurrence (TSK-13, TSK-14), adding a Milestone (MS-39), deleting a Milestone (MS-32), a Milestone pause that makes a checkpoint unearnable (MS-24), a shared window no child can earn (SSW-21), removing a participant (SH-7), or an explicit renegotiation (GR-4b). Each adjusts available points by the points added or removed, and changes the current target by the reward's difficulty % of that amount, rounded in the child's favour: a decrease is rounded up, an increase rounded down. The target is never recalculated from scratch, so a renegotiated target is kept. Bonuses or base points already earned are never affected. If a change brings the target to or below the earned balance, the reward is reached at once and its confirmation window starts; the preview warns of this beforehand (as in MS-31). *(v2)*
+- **GR-4b** Renegotiation is an explicit parent action, in one of two ways: change the reward's difficulty, which changes the target by the difference in difficulty % × current available points (DIF-5); or type a new target between the earned balance + 1 and the available points. A typed target at or below the balance is allowed only with the warning that the reward will be reached at once. Either way the parent sees the old and new target before confirming, and the child sees a neutral notice: "Your goal changed". *(v2)*
 - **GR-5** The app updates the forecast on every schedule change and warns the parent when remaining available points can no longer reach the target. It offers replanning: extend the timeframe, add earning opportunities, or renegotiate the target.
 - **GR-6** Setup must make clear that, because bonuses are in the target, missed bonuses may require extra tasks or more time.
 - **GR-7** Activation is blocked when there are zero earning opportunities or the target exceeds available points.
@@ -263,9 +273,9 @@ Each approved eligible occurrence credits every applicable open reward independe
 - **GR-11** A reward is reached when its earned balance is at or above the target **and**, if the parent set one, its required Milestone is complete (including a Milestone still in its own confirmation window).
 - **GR-12** If only the points condition is met, the child sees "Points achieved — milestone remaining". The balance is not reset.
 - **GR-13** When reached, the reward enters its **confirmation window** (Section 13): the child sees "Reward reached — confirming", the voucher is held, earnings continue to credit the balance, and shared streak windows stay open.
-- **GR-14** When the window closes — after 72 hours, or earlier if the parent confirms — the app issues one voucher, marks the reward achieved, records the final total and earning history, and resets that reward's balance to zero. Any connected Milestones still open close at the same moment (GR-17). *(v2)* Surplus points do not carry forward. Resetting one reward never affects the other. If the reward requires a Milestone, the voucher waits until both the Milestone's and the reward's windows have closed.
+- **GR-14** When the window closes — after 72 hours, or earlier if the parent confirms — the app issues one voucher, marks the reward achieved, records the final total and earning history, and resets that reward's balance to zero. Any connected Milestones still open close at the same moment (GR-17). *(v2)* Surplus points do not carry forward. Resetting one reward never affects the other. If the reward requires a Milestone, the voucher waits until both the Milestone's and the reward's windows have closed. Confirming the reward or its handover early also confirms a required Milestone still in its confirmation window; the confirmation screen says so. *(v2)*
 - **GR-15** A voucher is never revoked once issued. The parent confirms the physical handover separately from the voucher; confirming the handover during the window also confirms the reward.
-- **GR-16** A required Milestone must have a deadline on or before the reward's planned end date. A required Milestone can be set at setup or added later under MS-38 to MS-40. *(v2)*
+- **GR-16** Every Milestone, required or optional, must have a deadline on or before the reward's planned end date, including after a Milestone pause (MS-24) or extension (MS-22). A required Milestone can be set at setup or added later under MS-38 to MS-40. *(v2)*
 - **GR-17** Early achievement is allowed. When a personal reward is achieved (its voucher issued), every connected Milestone closes and moves to history: its progress is recorded, unearned bonuses are forfeited, remaining checkpoint windows end, and future milestone-linked tasks become routine tasks. The Reward reached notification states this. *(v2)*
 
 ### 8.5 Changing the prize
@@ -326,12 +336,12 @@ A Milestone is a personal sub-goal that completes automatically when the child r
 
 - **MS-18** The completion count is prefilled as difficulty % × planned milestone-linked occurrences, rounded up. The parent can edit it from 1 up to the planned number. It locks at activation, and changes later only through excusals (TSK-13) or an explicit parent edit. *(v2)*
 - **MS-19** The Milestone completes automatically the moment the count of approved milestone-linked occurrences reaches the completion count. Excused and paused-day occurrences do not count. Approved milestone-linked occurrences after completion keep counting, so a Milestone reopened by a correction can be completed again. *(v2)*
-- **MS-20** Completion is on time when the activity date of the occurrence that reaches the count is on or before the deadline.
+- **MS-20** Completion is on time when the activity date of the occurrence that reaches the count is on or before the deadline. This also applies to re-completion after a reopening (10.6), even when the deadline has passed by then. *(v2)*
     - On time: satisfies any reward prerequisite and earns the completion bonus.
     - Late: satisfies the prerequisite, no completion bonus.
     - Not completed: keeps blocking a reward that requires it.
-- **MS-21** Early completion earns the completion bonus but not unearned checkpoint bonuses.
-- **MS-22** The parent can extend the deadline before it passes (bonus eligibility kept). After it passes, an extension restores the completion bonus only if the parent explicitly chooses to. An extension adds no checkpoint windows. *(v2)*
+- **MS-21** Early completion earns the completion bonus. Remaining checkpoint bonuses are not paid automatically: their windows keep running to the deadline and pay normally when the child qualifies (10.6). *(v2)*
+- **MS-22** The parent can extend the deadline before it passes (bonus eligibility kept). After it passes, an extension restores the completion bonus only if the parent explicitly chooses to. An extension adds no checkpoint windows. An extension can never move the deadline past the reward's end date (GR-16); the parent must extend the reward first. *(v2)*
 - **MS-22a** A Milestone not complete when its deadline passes moves to **past deadline, awaiting review**. The parent gets a daily reminder to extend the deadline, lower the completion count, or delete the Milestone. Until they decide, approved linked occurrences keep counting toward the completion count (completion will be late, MS-20) and earn base points; no new checkpoint windows start. A required Milestone in review keeps blocking its reward. *(v2)*
 - **MS-23** The app updates the Milestone forecast on every schedule change or excusal and warns when remaining scheduled milestone-linked occurrences can no longer reach the completion count. It offers to extend the deadline or lower the count, with a preview.
 
@@ -340,13 +350,13 @@ A Milestone is a personal sub-goal that completes automatically when the child r
 When a Milestone completes, it enters a 72-hour confirmation window (Section 13). The parent is notified at once.
 
 1. During the window the Milestone shows as complete to the child. Its completion bonus and prerequisite status apply, its linked occurrences stay unlocked, and its checkpoints continue.
-2. A correction that drops the approved count below the completion count reopens the Milestone: the completion bonus is removed, any prerequisite on it becomes unmet again, and the Milestone continues. If the deadline has passed by then, re-completion counts as late (no bonus). Re-completion starts a fresh 72-hour confirmation window. *(v2)*
-3. When the window closes — after 72 hours, or earlier if the parent confirms — the completion is confirmed. The Milestone stays open until its deadline so its remaining checkpoint windows can run, and its linked tasks stay milestone-linked. It moves to history once both the window has closed and the deadline has passed, or earlier when its reward is achieved (GR-17). This is not a deletion and shows no deletion warning. *(v2)*
+2. A correction that drops the approved count below the completion count reopens the Milestone: the completion bonus is removed, any prerequisite on it becomes unmet again, and the Milestone continues. Re-completion is on time or late by the activity date of the occurrence that reaches the count (MS-20). Re-completion starts a fresh 72-hour confirmation window. *(v2)*
+3. When the window closes — after 72 hours, or earlier if the parent confirms — the completion is confirmed. The Milestone stays open so its remaining checkpoint windows can run, and its linked tasks stay milestone-linked up to the deadline; tasks scheduled after the deadline become routine from the day after it. It moves to history once both the window has closed and the last checkpoint result has closed (3 days after the deadline, MS-17), or earlier when its reward is achieved (GR-17). This is not a deletion and shows no deletion warning. *(v2)*
 4. On moving to history: linked occurrences lock and future milestone-linked tasks become routine tasks. The parent can choose from the completion notification to delete them instead. *(v2)*
 
 ### 10.7 Pause
 
-- **MS-24** The parent can pause a Milestone. The deadline and checkpoint window clocks freeze, and the deadline shifts by the pause length.
+- **MS-24** The parent can pause a Milestone. The deadline and checkpoint window clocks freeze, and the deadline shifts by the pause length, but never past the reward's end date (GR-16): at that cap the remaining windows are shortened instead. If a shortened checkpoint window ends up with fewer eligible days than its streak, its bonus is removed from available points and the target is lowered (GR-4a). The pause preview shows this. *(v2)*
 - **MS-25** While a Milestone is paused, its linked occurrences still earn base points toward any open Golden Reward, but they do not count toward its completion count and are neutral for its streaks.
 - **MS-26** A Milestone's own pauses last at most **14 days in total**. At 14 days it resumes automatically and the parent is notified.
 - **MS-27** Pausing the connected Golden Reward also freezes the Milestone (LC-2). That freeze is governed by the reward's pause limit, not the Milestone's.
@@ -365,7 +375,7 @@ When a Milestone completes, it enters a 72-hour confirmation window (Section 13)
 Old MS-34 to MS-37 (Orphaned Milestones) are removed: a Milestone is never standalone.
 
 - **MS-38** A Milestone, required or optional, can be added to the child's running personal Golden Reward only within the reward's **first 14 active days** (paused days don't count), and only while the reward's earned balance is below its target. After that, a new Milestone needs a new reward.
-- **MS-39** Adding a Milestone recalculates the target (GR-4a): available points rise by the Milestone's bonus budget plus 10 × its linked occurrences that were not already planned in the reward, and the target rises by the reward's difficulty % of that. A warning shows the old and new target, and the parent must confirm. The child sees a neutral notice: "Your goal changed: new Milestone added".
+- **MS-39** Adding a Milestone raises the target (GR-4a): available points rise by the Milestone's bonus budget plus 10 × its linked occurrences that were not already planned in the reward, and the target rises by the reward's difficulty % of that. A warning shows the old and new target, and the parent must confirm. The child sees a neutral notice: "Your goal changed: new Milestone added".
 - **MS-40** If the added Milestone is required, the warning also states that the reward will now wait for this Milestone as well as the points. Its deadline must be on or before the reward's end date (GR-16).
 - **MS-41** The parent receives a separate push notification on the reward's active days 3, 6, 9 and 12, e.g. "You can still add a Milestone to Bike reward until Sat 5 Dec (5 days left)". The reminders stop early once the child has two active Milestones (MS-4) or the reward's earned balance has reached its target.
 
@@ -430,17 +440,17 @@ A child scheduled twice a week has 4 eligible days in a 14-day window, so the su
 ### 11.7 Payout and headcount
 
 - **SSW-16** A child's share is credited immediately when the approval that completes their streak is processed, at the headcount at that moment.
-- **SSW-16a** When the window's result closes (3 days after the window ends), every child who qualified is topped up to the full share for the final headcount. Example: Dan qualifies on day 16 at headcount 2 (+175); Zoe drops out on day 17; at close Dan is topped up by 175 to the single-child share of 350. *(v2)*
-- **SSW-17** The headcount is frozen at window start, with two exceptions that remove a child who has not yet qualified: excusals that make qualification impossible, and leaving the reward (11.8). A child who already qualified keeps their share and stays counted.
+- **SSW-16a** When the window's result closes (3 days after the window ends), every child who qualified is topped up to the full share for the final headcount. Example: in a window running days 15–28, Dan qualifies on day 19 at headcount 2 (+175); Zoe, who has not qualified, falls ill and is excused out of the rest of the window on day 20; at close Dan is topped up by 175 to the single-child share of 350. *(v2)*
+- **SSW-17** The headcount is frozen at window start, with two exceptions that remove a child who has not yet qualified: excusals that make qualification impossible, and leaving the reward (11.8). A child who already qualified keeps their share and stays counted. A child removed by excusal stays out of that window's headcount even if the excusal is later undone; the undo restores only their task points and target change (TSK-14). *(v2)*
 - **SSW-18** When the headcount shrinks, the remaining qualifiers' shares rise, because the full window bonus is divided among fewer children. This is intended: the full window bonus is part of the target, so an ill or departed sibling never takes their part of the window bonus away from the team. (Their excused task points come off the target under TSK-13.) *(v2)* Setup and the window view explain this to the parent.
 - **SSW-19** Shared streak windows stay open while the reward is confirming. When the confirmation window closes and the reward is achieved, the current and all future windows close; no further shares are paid.
 - **SSW-20** If the reward is extended, new whole windows are added for the extension period; the target is unchanged (Section 14).
-- **SSW-21** If the headcount of a window reaches zero (every participant excused out of it), its maximum bonus is removed from available points and the target is lowered by team difficulty % × that maximum (GR-4a), previewed in the excusal that causes it. *(v2)*
+- **SSW-21** If the headcount of a window reaches zero (every participant excused out of it), its maximum bonus is removed from available points and the target is lowered by team difficulty % × that maximum (GR-4a), previewed in the excusal that causes it. Undoing an excusal never restores it, since the headcount stays zero (SSW-17). *(v2)*
 
 ### 11.8 Leaving and cancellation
 
 - **SH-6** Only the parent can remove a child. Points the child contributed stay in the shared balance.
-- **SH-7** The leaver is excluded from all future windows. The target stays fixed; the forecast updates and replanning is offered if the target is no longer reachable.
+- **SH-7** The leaver is excluded from all future windows. Their remaining planned task points come off available points, and the target drops by team difficulty % of them (GR-4a). Future windows are recalculated without them: each window maximum is recomputed from the remaining participants' streak-linked points and rounded up to the new participant count, and the target drops by team difficulty % of the difference. The current window keeps its full maximum (SSW-18). The removal warning previews the new target; the forecast updates and replanning is offered if the target is no longer reachable. *(v2)*
 - **SH-8** If removing a child would leave one participant, the reward is cancelled. Before the parent confirms, a warning states that the shared balance will be deleted, shows how many of those points the remaining child contributed, and suggests pausing the reward instead. *(v2)* Earning history is kept as a record only.
 
 ## 12. Challenges
@@ -498,7 +508,7 @@ Every prize — a reached Golden Reward, a completed Milestone, a successful Cha
 - **CW-5** A prize is rejected only by correcting the occurrences the child gamed (APR-13). The parent cannot reject a prize without naming at least one dishonest or mistaken occurrence.
 - **CW-6** If the item no longer qualifies after the corrections, it is rejected. If it still qualifies, the prize stands.
 - **CW-7** Corrections remove base points and any Milestone completion bonus that no longer applies. Checkpoint bonuses and shared-window shares already paid stay, unless the correction falls under APR-19. *(v2)*
-- **CW-8** A rejected item reopens. If its period, deadline or end date has not passed, it keeps running and the child can continue earning toward it. If it has passed, the parent is prompted to **extend, edit, or delete** it, with a daily reminder until they decide.
+- **CW-8** A rejected Golden Reward or Milestone reopens. If its deadline or end date has not passed, it keeps running and the child can continue earning toward it. If it has passed, the parent is prompted to **extend, edit, or delete** it, with a daily reminder until they decide. A rejected Challenge is a fail: the parent can still extend it during its confirmation window (CH-17), and the fail is final when the window closes (CH-11). *(v2)*
 - **CW-9** The child sees a neutral notice, e.g. "Not approved: Bike reward", with an optional parent note and no penalty animation.
 
 ## 14. Lifecycle: pause, end date, extension, deletion, cancellation
@@ -554,7 +564,7 @@ A Golden Reward moves through draft → active ⇄ paused → past end date (und
 | Pause limit (total) | 14 days | 14 days (own pauses) | 7 days |
 | Completes when | Earned balance ≥ target (+ required Milestone) | Approved linked count ≥ completion count | Period ends with rate ≥ threshold |
 | Confirmation window | 72 hours | 72 hours | 72 hours |
-| Extension | Within 365 days; target unchanged | Before deadline; after it only with explicit bonus choice | Before end or after a fail; within 28 days |
+| Extension | Within 365 days; target unchanged | Before deadline; after it only with explicit bonus choice; never past the reward's end date | Before end or after a fail; within 28 days |
 | Deletion | Warned; balance deleted | Warned; earned points stay | Warned |
 
 ## 15. Notifications and child-facing feedback
@@ -588,7 +598,7 @@ The parent gets one summary a day at the end of the evening slot plus a few even
 - **NT-7** "Reward reached — confirming" is shown while a reached Golden Reward is in its confirmation window.
 - **NT-8** A rejected prize shows a neutral notice ("Not approved: Bike reward") with an optional parent note.
 - **NT-9** The child never sees a prize's monetary value.
-- **NT-10** When a Milestone is added to a running reward, the child sees a neutral notice: "Your goal changed: new Milestone added". *(v2)*
+- **NT-10** When a Milestone is added to a running reward, the child sees a neutral notice: "Your goal changed: new Milestone added". When the target is renegotiated (GR-4b), the notice is "Your goal changed". *(v2)*
 
 ## 16. Validation, warnings and rounding
 
@@ -600,7 +610,7 @@ The app blocks only what is impossible and warns about what is tight; it never c
 - A child would have a second open personal or a second open shared Golden Reward.
 - Zero earning opportunities, or target above available points.
 - A Milestone activated without a connection to the child's open personal reward.
-- A required Milestone whose deadline is after the reward's end date. *(v2)*
+- A Milestone whose deadline is after the reward's end date, including through an extension. *(v2)*
 - A Milestone added to a running reward after its first 14 active days, or once its earned balance has reached the target. *(v2)*
 - A Milestone completion count below 1 or above its planned milestone-linked occurrences.
 - A checkpoint or shared window with fewer eligible days than the required streak, or a shared-window child with fewer than 2 eligible days.
@@ -630,9 +640,10 @@ The app blocks only what is impossible and warns about what is tight; it never c
 | Individual checkpoint | Pool ÷ count; leftover single points to the earliest checkpoints |
 | Milestone completion count | Difficulty % × planned milestone-linked occurrences, rounded up |
 | Shared window maximum | 50% of planned streak-linked points in the window, rounded up to a multiple of the participant count |
-| Golden Reward target | Rounded up to the next whole point, including after any GR-4a change *(v2)* |
+| Golden Reward target | Rounded up to the next whole point at activation |
+| Target change (GR-4a, GR-4b) *(v2)* | Difficulty % × points added or removed, rounded in the child's favour: decreases up, increases down |
 | Shared window share *(v2)* | Maximum ÷ headcount, rounded up to a whole point |
-| Completion count after excusals *(v2)* | Reduced by difficulty % per excused occurrence, rounded down, minimum 1 |
+| Completion count after excusals *(v2)* | Reduced by ⌊count ÷ planned ratio × total excused linked occurrences⌋, minimum 1 (TSK-13) |
 | Challenge required completions | Rounded up |
 | Prize Calculator suggestion | Rounded up to whole days, then clamped to 28–365 |
 
@@ -681,7 +692,7 @@ The parent keeps Dan at 5 and sets Zoe to 3; both are within range and at or bel
 1. Window 1: Zoe completes days 1–3 → qualifies on day 3, +175. Dan misses one task on day 3, his streak resets, then days 4–8 are complete → qualifies on day 8, +175. Balance after day 14: Dan 55 × 10 + Zoe 28 × 10 + 350 = 1,180.
 2. Window 2: Zoe completes day 15, misses a task on day 16, then falls ill. On day 17 the parent excuses all her occurrences for days 17–28. She now has no eligible days left, so she leaves the window 2 headcount (SSW-17).
 3. Day 19: Dan completes his fifth straight day → qualifies. Earned bonus = 350 × 1 ÷ 1 = 350, the full window (SSW-18). Balance: 1,180 + 200 (Dan days 15–19) + 30 (Zoe days 15–16) + 350 = 1,760.
-4. Excusing Zoe's 24 occurrences (days 17–28) removes 240 points from available points: the excusal preview shows the target falling from 2,000 to ⌈0.8 × 2,260⌉ = 1,808 (TSK-13), and the parent confirms. *(v2)*
+4. Excusing Zoe's 24 occurrences (days 17–28) removes 240 points from available points: the excusal preview shows the target falling from 2,000 by 0.8 × 240 = 192 to 1,808 (TSK-13, GR-4a), and the parent confirms. *(v2)*
 5. Dan earns 40 a day from day 20. After day 21 the balance is 1,760 + 2 × 40 = 1,840 ≥ 1,808 → "Reward reached — confirming"; team voucher held; window 2 stays open. *(v2)*
 6. Days 22–24 add 120 during the window → 1,960. The window closes at the end of day 24 with no rejection: team voucher issued, 1,960 recorded, balance reset to 0, and window 2 closes. Days 25–30 are tracked only. *(v2)*
 
@@ -737,8 +748,8 @@ The parent's daily rate is 4 per day, in the currency from their settings.
 | Milestone budget | 50% × 1,000 milestone-linked task points | 500 |
 | Available points | 3,000 + 500 | 3,500 |
 | Target (Normal 80%) | 0.8 × 3,500 | 2,800 |
-1. The prize value of 400 never enters the calculation: the same schedule for a cheaper prize would give the same 2,800 target. The prize's value only shaped the 100-day timeframe.
-2. Clamping: a prize worth 100 at the same rate gives 25 days and is suggested as 28; a prize worth 2,000 gives 500 days and is suggested as 365, with a note that it may suit a longer plan or a higher daily rate.
+3. The prize value of 400 never enters the calculation: the same schedule for a cheaper prize would give the same 2,800 target. The prize's value only shaped the 100-day timeframe.
+4. Clamping: a prize worth 100 at the same rate gives 25 days and is suggested as 28; a prize worth 2,000 gives 500 days and is suggested as 365, with a note that it may suit a longer plan or a higher daily rate.
 
 ## 18. Dependencies
 
