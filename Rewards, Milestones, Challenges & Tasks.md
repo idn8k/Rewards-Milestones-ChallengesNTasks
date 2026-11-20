@@ -17,7 +17,7 @@
 
 ## 1. Overview
 
-Golden Rewards is a parent-managed chore and goal system in which children earn points toward one tangible, parent-agreed prize — a Golden Reward. The parent picks the prize, the timeframe and the difficulty; the app calculates an achievable point target from the child's planned tasks and bonus opportunities, so the child never chases an arbitrary number. Milestones add verified sub-goals, shared Golden Rewards let siblings work toward one prize together, and Short-term challenges reward a consistent completion rate over a few days or weeks.
+Golden Rewards is a parent-managed chore and goal system in which children earn points toward one tangible, parent-agreed prize — a Golden Reward. The parent picks the prize, the timeframe and the difficulty; the app calculates an achievable point target from the child's planned tasks and bonus opportunities, so the child never chases an arbitrary number. Milestones add verified sub-goals, shared Golden Rewards let siblings work toward one prize together, and Challenges reward a consistent completion rate over a few days or weeks.
 
 ### Problem
 
@@ -38,7 +38,7 @@ Chore charts fail when targets feel arbitrary, when one bad day wipes out progre
 | Reward completion rate | Share of activated Golden Rewards achieved by their planned end date or an agreed extension |
 | Task completion rate | Approved occurrences ÷ eligible scheduled occurrences, per child, per Challenge period |
 | Streak qualification rate | Share of checkpoint and shared streak windows in which each child qualifies |
-| Challenge success rate | Share of Short-term challenges whose final result is success |
+| Challenge success rate | Share of Challenges whose final result is success |
 | Parent effort | Share of submissions resolved by the parent before auto-approval |
 | Correction rate | Rejected completions ÷ submitted completions (signals honesty issues or unclear tasks) |
 | Prize rejection rate | Share of reached Golden Rewards, completed Milestones and successful challenges rejected in their confirmation window |
@@ -51,7 +51,7 @@ The parent configures and confirms everything; the child sees progress and submi
 
 | **Action** | **Parent** | **Child** |
 | --- | --- | --- |
-| Create, edit, pause, extend, delete Golden Rewards, Milestones and Short-term challenges | Yes | No |
+| Create, edit, pause, extend, delete Golden Rewards, Milestones and Challenges | Yes | No |
 | Schedule tasks, assign them to slots, link tasks to Milestones, select streak-linked tasks | Yes | No |
 | Set difficulty, Milestone completion count, window length, streak lengths | Yes | No |
 | Use the Prize Calculator and see prize values | Yes | No |
@@ -93,7 +93,7 @@ Trust mode (child self-report without approval) is removed from this feature. Ev
 | Earned points | Points from approved occurrences and paid bonuses. Only earned points move balances, streaks and results. |
 | Approved | An occurrence confirmed by the parent or auto-approved 72 hours after submission. |
 | Excused | Marked by the parent (illness, holiday). Earns nothing, counts for nothing, breaks nothing, and lowers the target and completion count it would have counted toward (TSK-13). *(v2)* |
-| Difficulty | Easy, Normal or Hard, set by the parent at setup of every Golden Reward, Milestone and Short-term challenge. |
+| Difficulty | Easy, Normal or Hard, set by the parent at setup of every Golden Reward, Milestone and Challenge. |
 | Milestone | A personal sub-goal that always belongs to one personal Golden Reward *(v2)*, with milestone-linked tasks, a completion count, checkpoint bonuses and a completion bonus. |
 | Milestone completion count | The number of approved milestone-linked occurrences that completes a Milestone. Locked at activation. |
 | Checkpoint | A non-overlapping window inside a Milestone that pays a bonus once when the child completes a streak. |
@@ -103,9 +103,9 @@ Trust mode (child self-report without approval) is removed from this feature. Ev
 | Target | Available points × difficulty percentage, rounded up, locked at activation. |
 | Confirmation window | The 72 hours after a Golden Reward is reached, a Milestone completes or a challenge period ends, during which the parent can still correct occurrences. An item that qualifies again after being reopened starts a fresh window. *(v2)* |
 | Voucher | The record issued when a Golden Reward's confirmation window closes; separate from the physical handover. |
-| Short-term challenge | A 3–28 day challenge judged on completion rate, and the non-point prize it unlocks. One name for both. |
-| Challenge period | The length of a Short-term challenge, excluding paused days. |
-| Collaborative challenge | A Short-term challenge with two or more children and one team prize. |
+| Challenge | A 3–28 day challenge judged on completion rate, and the non-point prize it unlocks. One name for both. |
+| Challenge period | The length of a Challenge, excluding paused days. |
+| Collaborative challenge | A Challenge with two or more children and one team prize. |
 | Prize Calculator | An optional setup helper that suggests a Golden Reward timeframe from the prize's value. |
 | Daily rate | The prize value per day the parent uses in the Prize Calculator, in their currency. |
 
@@ -177,7 +177,7 @@ An occurrence becomes locked, and stays in its current state, under APR-10. A pe
 - **APR-10** The parent can approve or reject an occurrence retrospectively, including occurrences the child never submitted, while the occurrence is unlocked. It is unlocked while any of these holds:
 - a Golden Reward it credits is open;
 - for a milestone-linked task: its Milestone is open — active, paused, complete with checkpoint windows still running, in its confirmation window, or past its deadline awaiting review *(v2)*;
-- a Short-term challenge it belongs to is running, paused, or in its confirmation window.
+- a Challenge it belongs to is running, paused, or in its confirmation window.
 
 When none holds, the occurrence is locked and cannot change.
 
@@ -202,7 +202,7 @@ When none holds, the occurrence is locked and cannot change.
 
 ## 7. Difficulty
 
-Difficulty is the single setting that shapes how demanding each item is. The parent sets it at setup of every Golden Reward, Milestone and Short-term challenge; it defaults to Normal. There are no age profiles: the app does not store or use the child's age.
+Difficulty is the single setting that shapes how demanding each item is. The parent sets it at setup of every Golden Reward, Milestone and Challenge; it defaults to Normal. There are no age profiles: the app does not store or use the child's age.
 
 | **Difficulty** | **Golden Reward target** | **Milestone completion count** | **Suggested streak (checkpoints and shared windows)** | **Challenge threshold** |
 | --- | --- | --- | --- | --- |
@@ -212,7 +212,7 @@ Difficulty is the single setting that shapes how demanding each item is. The par
 - **DIF-1** A personal Golden Reward's difficulty is set by the parent at setup.
 - **DIF-2** A shared Golden Reward has one team difficulty, set by the parent for that reward. It is never inherited from any participant's personal reward.
 - **DIF-3** A Milestone has its own difficulty, set at setup. It drives the suggested completion count and checkpoint streak (Section 10).
-- **DIF-4** A Short-term challenge's difficulty is set per child. In a collaborative challenge each child can have a different difficulty (Section 12.4).
+- **DIF-4** A Challenge's difficulty is set per child. In a collaborative challenge each child can have a different difficulty (Section 12.4).
 - **DIF-5** Difficulty locks at activation (or at a challenge's start). Changing it later needs an explicit parent action with a preview of effects.
 - **DIF-6** Suggestions derived from difficulty (completion counts, streak lengths) are prefills; the parent can edit them within the allowed ranges.
 
@@ -276,7 +276,7 @@ Each approved eligible occurrence credits every applicable open reward independe
 
 The Prize Calculator helps a parent choose a fair timeframe for a prize of a given value. It suggests a duration; the target is still calculated only from the schedule and difficulty.
 
-- **PC-1** The Prize Calculator is optional and is offered at setup of personal and shared Golden Rewards. It is not offered for Short-term challenges.
+- **PC-1** The Prize Calculator is optional and is offered at setup of personal and shared Golden Rewards. It is not offered for Challenges.
 - **PC-2** The parent enters the prize's value in the currency set in the app's user settings.
 - **PC-3** The calculator uses the parent's **daily rate**: the prize value one day of effort is worth (e.g. 5 per day). There is no built-in default. The first time the calculator is used, the parent enters a daily rate and the app remembers it for later rewards. The parent can edit it in the app's user settings, outside this feature.
 - **PC-4** Suggested timeframe:
@@ -443,17 +443,17 @@ A child scheduled twice a week has 4 eligible days in a 14-day window, so the su
 - **SH-7** The leaver is excluded from all future windows. The target stays fixed; the forecast updates and replanning is offered if the target is no longer reachable.
 - **SH-8** If removing a child would leave one participant, the reward is cancelled. Before the parent confirms, a warning states that the shared balance will be deleted, shows how many of those points the remaining child contributed, and suggests pausing the reward instead. *(v2)* Earning history is kept as a record only.
 
-## 12. Short-term challenges
+## 12. Challenges
 
-A Short-term challenge succeeds when the task completion rate over its challenge period meets the difficulty threshold. It is judged on completion rate, never points; it never costs or deducts points, and it works with or without an open Golden Reward.
+A Challenge succeeds when the task completion rate over its challenge period meets the difficulty threshold. It is judged on completion rate, never points; it never costs or deducts points, and it works with or without an open Golden Reward.
 
 \text{Completion rate} = \frac{\text{Approved occurrences}}{\text{Eligible scheduled occurrences}} \times 100\%
 
 ### 12.1 Structure and limits
 
-- **CH-1** A Short-term challenge has one or more children, a challenge period of **3 to 28 days** (excluding paused days), a difficulty per child, and a prize. The prize is any non-point reward the parent defines (e.g. pizza night, family cinema time).
-- **CH-2** A child can have up to two running Short-term challenges. Starting a third shows a warning, but is not blocked.
-- **CH-3** Short-term challenges never spend, reduce or add to a Golden Reward balance.
+- **CH-1** A Challenge has one or more children, a challenge period of **3 to 28 days** (excluding paused days), a difficulty per child, and a prize. The prize is any non-point reward the parent defines (e.g. pizza night, family cinema time).
+- **CH-2** A child can have up to two running Challenges. Starting a third shows a warning, but is not blocked.
+- **CH-3** Challenges never spend, reduce or add to a Golden Reward balance.
 
 ### 12.2 What counts
 
@@ -484,7 +484,7 @@ A Short-term challenge succeeds when the task completion rate over its challenge
 
 ## 13. Confirmation windows and rejected prizes
 
-Every prize — a reached Golden Reward, a completed Milestone, a successful Short-term challenge — is shown to the child at once, then held for 72 hours so the parent can still catch dishonest claims.
+Every prize — a reached Golden Reward, a completed Milestone, a successful Challenge — is shown to the child at once, then held for 72 hours so the parent can still catch dishonest claims.
 
 ### 13.1 Confirmation window
 
@@ -547,7 +547,7 @@ A Golden Reward moves through draft → active ⇄ paused → past end date (und
 
 ### 14.6 Summary across item types
 
-|  | **Golden Reward** | **Milestone** | **Short-term challenge** |
+|  | **Golden Reward** | **Milestone** | **Challenge** |
 | --- | --- | --- | --- |
 | Duration | 28–365 days | Deadline on or before the connected reward's end date | 3–28 days |
 | Difficulty | Set at setup; shared: one team difficulty | Set at setup | Set per child at setup |
@@ -605,14 +605,14 @@ The app blocks only what is impossible and warns about what is tight; it never c
 - A Milestone completion count below 1 or above its planned milestone-linked occurrences.
 - A checkpoint or shared window with fewer eligible days than the required streak, or a shared-window child with fewer than 2 eligible days.
 - A shared reward with fewer than two participants, or a child with no streak-linked task.
-- A Short-term challenge period outside 3–28 days (excluding paused days), including after an extension.
+- A Challenge period outside 3–28 days (excluding paused days), including after an extension.
 - A Golden Reward extension beyond 365 days (excluding paused days).
 
 ### 16.2 Warnings (allowed after confirmation)
 
 - Streak longer than half the eligible days in its window.
 - A third concurrent Milestone.
-- A third running Short-term challenge for a child.
+- A third running Challenge for a child.
 - More than 5 occurrences in a slot, more than 10 in a day, or the same task twice on one day.
 - Remaining available points can no longer reach the target, or remaining milestone-linked occurrences can no longer reach the completion count.
 - Excusing or un-excusing an occurrence, or adding or deleting a Milestone, with a preview of the new target or completion count. *(v2)*
